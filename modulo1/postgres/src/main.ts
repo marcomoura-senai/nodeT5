@@ -1,45 +1,18 @@
-import { pool } from "./database";
+import { cadastrarCliente } from "./cliente";
+import { initDatabase } from "./database";
 
 async function main() {
-  const CPF = "10078055109";
 
-  // Insert
-  await pool.query(`
- INSERT INTO cliente (nome, email, cpf) VALUES ('Teste de cadastro Node', 'marco8@teste.com', '${CPF}');
-  `);
+  await initDatabase()
+  console.log('Banco inicializado')
 
+  const clienteCadastrado = await cadastrarCliente({
+    cpf: "10078055872",
+    email: "teste2@gmail.com",
+    nome: "Cliente teste",
+  });
 
-  // SELECT
-  const result = await pool.query(
-    `SELECT c.nome FROM cliente c WHERE c.cpf = '${CPF}'`,
-  );
-
-  if (result.rows.length === 0) {
-    console.error("Falha ao buscar");
-    return;
-  }
-
-  console.log(`Cliente cadastrado: ${result.rows[0].nome}`);
-
-  // UPDATE
-  await pool.query(
-    `UPDATE cliente SET nome = 'teste atualização' WHERE cpf = '${CPF}'`,
-  );
-
-  // SELECT
-  const result2 = await pool.query(
-    `SELECT c.nome FROM cliente c WHERE c.cpf = '${CPF}'`,
-  );
-
-  if (result2.rows.length === 0) {
-    console.error("Falha ao buscar cliente atualizado");
-    return;
-  }
-
-  console.log(`Cliente com nome atualizado: ${result2.rows[0].nome}`);
-
-  // DELETE
-  await pool.query(`DELETE FROM cliente WHERE cpf = '${CPF}'`)
+  console.log(`Cliente cadastrado: ${clienteCadastrado.cpf}`);
 }
 
 main().catch(console.error);

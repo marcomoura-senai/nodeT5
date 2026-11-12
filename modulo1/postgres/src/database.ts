@@ -8,3 +8,6 @@ export const pool = new Pool({
   database: "sctec",
 });
 
+export async function initDatabase() {
+  await pool.query('SELECT 1');
+}
